@@ -57,7 +57,6 @@ class Portfolio():
                 ticker = t
                 break
         ticker.add_transaction(amt, False, price)
-
         self.update_balance()
 
     def get_stock_history(self):
