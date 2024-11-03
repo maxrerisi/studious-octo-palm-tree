@@ -1,4 +1,4 @@
-from manage_times import current_time
+from manage_times import current_time, time_for_json
 from global_settings import PORTFOLIO_ID_PATH
 import json
 from stock_data import get_stock_price
@@ -30,7 +30,7 @@ class Portfolio():
         return {
             "id": self.id,
             "cash_balance": self.cash_balance,
-            "initial_time": self.intial_time,
+            "initial_time": time_for_json(self.intial_time),
             "stock_history": [t.to_json() for t in self.stock_history],
             "portfolio_value": self.portfolio_value
         }

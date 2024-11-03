@@ -52,8 +52,15 @@ class UserTickerInteraction:
             "last_update": time_for_json(self.last_update),
             "total_shares": self.total_shares,
             "transactions": self.transactions_for_json(),
-            "events": self.events
+            "events": self.events_for_json()
         }
+
+    def events_for_json(self):
+        out = []
+        for e in self.events:
+            e['date'] = time_for_json(e['date'])
+            out.append(e)
+        return out
 
     def check_events(self):
         updates = get_updates(self.ticker, self.last_update)
