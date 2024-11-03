@@ -23,7 +23,7 @@ class UserTickerInteraction:
             raise ValueError("Cannot sell more shares than you own")
         transaction = {
             "amount": amt,
-            "time": current_time(),
+            "time": time_for_json(current_time()),
             "sold": sell,
             "price": price,
             "total": amt * price
@@ -37,11 +37,12 @@ class UserTickerInteraction:
     def __str__(self) -> str:
         return f"User {self.user_id} {'Sold' if self.total_shares < 0 else 'Bought'} {abs(self.total_shares)} shares of {self.ticker} {time_to_text(self.initialize_time)}"
 
-    def transactions_for_json(self):
+    def events_for_json(self):
         out = []
-        for t in self.transactions:
-            t['time'] = time_for_json(t['time'])
-            out.append(t)
+        e_dict = self.events.copy()
+        for e in e_dict:
+            e['date'] = time_for_json(e['date'])
+            out.append(e)
         return out
 
     def __dict__(self):
@@ -51,16 +52,9 @@ class UserTickerInteraction:
             "time": time_for_json(self.initialize_time),
             "last_update": time_for_json(self.last_update),
             "total_shares": self.total_shares,
-            "transactions": self.transactions_for_json(),
+            "transactions": self.transactions,
             "events": self.events_for_json()
         }
-
-    def events_for_json(self):
-        out = []
-        for e in self.events:
-            e['date'] = time_for_json(e['date'])
-            out.append(e)
-        return out
 
     def check_events(self):
         updates = get_updates(self.ticker, self.last_update)

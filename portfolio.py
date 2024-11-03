@@ -36,7 +36,7 @@ class Portfolio():
         }
 
     def to_json(self):
-        return json.dumps(self.__dict__(), indent=4)
+        return json.dumps(self.__dict__())
 
     def update_balance(self):
         bal = self.cash_balance
@@ -78,3 +78,6 @@ class Portfolio():
 
 
 max = Portfolio()
+max.buy_stock("AAPL", 5)
+max.save()
+# TODO a way of loading from file.
