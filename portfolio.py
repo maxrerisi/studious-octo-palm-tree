@@ -81,3 +81,4 @@ max = Portfolio()
 max.buy_stock("AAPL", 5)
 max.save()
 # TODO a way of loading from file.
+# TODO fix the format of the JSONs that are written, they are weird and full of break chars
