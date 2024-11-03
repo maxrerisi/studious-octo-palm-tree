@@ -27,9 +27,10 @@ class Portfolio():
     def __dict__(self):
         return {
             "id": self.id,
-            "balance": self.balance,
+            "cash_balance": self.cash_balance,
             "initial_time": self.intial_time,
-            "stock_history": [t.__dict__() for t in self.stock_history]
+            "stock_history": [t.to_json() for t in self.stock_history],
+            "portfolio_value": self.portfolio_value
         }
 
     def to_json(self):
@@ -69,17 +70,3 @@ class Portfolio():
 
     def get_cash_balance(self):
         return float(f"{self.cash_balance:.2f}")
-
-
-max = Portfolio()
-print(max.portfolio_value)
-print(max.id)
-print(max.cash_balance)
-max.buy_stock("AAPL", 10)
-print(max.portfolio_value)
-print(max.get_cash_balance())
-print(max.get_stock_history())
-max.buy_stock("MSFT", 5)
-print(max.portfolio_value)
-print(max.get_cash_balance())
-print(max.get_stock_history())
