@@ -1,0 +1,25 @@
+{
+    "id": 0,
+    "cash_balance": 8885.449981689453,
+    "initial_time": "2024-11-03T08:04:50.335457-05:00",
+    "stock_history": [
+        {
+            "user_id": 0,
+            "ticker": "AAPL",
+            "time": "2024-11-03T08:04:50.521694-05:00",
+            "last_update": "2024-11-03T08:04:50.521694-05:00",
+            "total_shares": 5,
+            "transactions": [
+                {
+                    "amount": 5,
+                    "time": "2024-11-03T08:04:50.521694-05:00",
+                    "sold": false,
+                    "price": 222.91000366210938,
+                    "total": 1114.5500183105469
+                }
+            ],
+            "events": []
+        }
+    ],
+    "portfolio_value": 10000.0
+}

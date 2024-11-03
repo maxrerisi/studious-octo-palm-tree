@@ -32,7 +32,7 @@ class UserTickerInteraction:
         self.total_shares += -amt if sell else amt
 
     def to_json(self):
-        return json.dumps(self.__dict__())
+        return self.__dict__()
 
     def __str__(self) -> str:
         return f"User {self.user_id} {'Sold' if self.total_shares < 0 else 'Bought'} {abs(self.total_shares)} shares of {self.ticker} {time_to_text(self.initialize_time)}"
