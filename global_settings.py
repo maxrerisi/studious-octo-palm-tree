@@ -1,2 +1,3 @@
 STARTING_BALANCE = 10000
 PORTFOLIO_ID_FILE = "port_id.txt"
+PORTFOLIO_SAVE_DIR = "portfolios"

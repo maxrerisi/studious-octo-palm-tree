@@ -17,12 +17,13 @@ def get_id():
 
 class Portfolio():
     def __init__(self) -> None:
-        from global_settings import STARTING_BALANCE
+        from global_settings import STARTING_BALANCE, PORTFOLIO_SAVE_DIR
         self.id = get_id()
         self.cash_balance = STARTING_BALANCE
         self.intial_time = current_time()
         self.stock_history = []
         self.portfolio_value = self.cash_balance
+        self.path = f"{PORTFOLIO_SAVE_DIR}/{self.id}.json"
 
     def __dict__(self):
         return {
@@ -69,3 +70,7 @@ class Portfolio():
 
     def get_cash_balance(self):
         return float(f"{self.cash_balance:.2f}")
+
+    def save(self):
+        with open(self.path, "w") as f:
+            f.write(self.to_json())
