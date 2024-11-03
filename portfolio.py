@@ -24,6 +24,7 @@ class Portfolio():
         self.stock_history = []
         self.portfolio_value = self.cash_balance
         self.path = f"{PORTFOLIO_SAVE_DIR}/{self.id}.json"
+        self.save()
 
     def __dict__(self):
         return {
@@ -35,7 +36,7 @@ class Portfolio():
         }
 
     def to_json(self):
-        return json.dumps(self.__dict__())
+        return json.dumps(self.__dict__(), indent=4)
 
     def update_balance(self):
         bal = self.cash_balance
@@ -73,4 +74,7 @@ class Portfolio():
 
     def save(self):
         with open(self.path, "w") as f:
-            f.write(self.to_json())
+            json.dump(self.__dict__(), f, indent=4)
+
+
+max = Portfolio()

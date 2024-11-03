@@ -1,4 +1,4 @@
-from manage_times import current_time, time_to_text
+from manage_times import current_time, time_to_text, time_for_json
 import json
 from stock_data import get_stock_price, get_updates
 
@@ -7,8 +7,8 @@ class UserTickerInteraction:
     def __init__(self, user_id: int, ticker: str) -> None:
         self.user_id = user_id
         self.ticker = ticker.upper()
-        self.time = current_time()
-        self.last_update = self.time
+        self.initialize_time = current_time()
+        self.last_update = self.initialize_time
         self.total_shares = 0
         self.transactions = []
         self.events = []
@@ -35,16 +35,23 @@ class UserTickerInteraction:
         return json.dumps(self.__dict__())
 
     def __str__(self) -> str:
-        return f"User {self.user_id} {'Sold' if self.total_shares < 0 else 'Bought'} {abs(self.total_shares)} shares of {self.ticker} {time_to_text(self.time)}"
+        return f"User {self.user_id} {'Sold' if self.total_shares < 0 else 'Bought'} {abs(self.total_shares)} shares of {self.ticker} {time_to_text(self.initialize_time)}"
+
+    def transactions_for_json(self):
+        out = []
+        for t in self.transactions:
+            t['time'] = time_for_json(t['time'])
+            out.append(t)
+        return out
 
     def __dict__(self):
         return {
             "user_id": self.user_id,
             "ticker": self.ticker,
-            "time": self.time,
-            "last_update": self.last_update,
+            "time": time_for_json(self.initialize_time),
+            "last_update": time_for_json(self.last_update),
             "total_shares": self.total_shares,
-            "transactions": self.transactions,
+            "transactions": self.transactions_for_json(),
             "events": self.events
         }
 

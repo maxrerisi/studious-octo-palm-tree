@@ -35,3 +35,7 @@ def current_time():
 
 def other_time_to_arrow(other_time):
     return arrow.get(other_time)
+
+
+def time_for_json(_time):
+    return _time.for_json()
