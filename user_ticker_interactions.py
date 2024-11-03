@@ -14,6 +14,8 @@ class UserTickerInteraction:
         self.events = []
 
     def add_transaction(self, amt: int, sell: bool) -> None:
+        if sell and self.total_shares < amt:
+            raise ValueError("Cannot sell more shares than you own")
         price = get_stock_price(self.ticker)
         transaction = {
             "amount": amt,
