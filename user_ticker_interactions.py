@@ -12,8 +12,11 @@ class UserTickerInteraction:
         self.total_shares = 0
         self.transactions = []
         self.events = []
+        self.uncollected_dividends = 0
 
     def add_transaction(self, amt: int, sell: bool, price=None) -> None:
+        self.gather_uncollected_dividends()
+        self.collect_splits()
         if price is None:
             price = get_stock_price(self.ticker)
         if sell and self.total_shares < amt:
@@ -59,10 +62,15 @@ class UserTickerInteraction:
                 self.total_shares *= event['amount']
                 event['collected'] = True
 
-    def collect_dividends(self):
-        out = 0
+    def gather_uncollected_dividends(self):
         for event in self.events:
             if event['type'] == 'dividend' and not event['collected']:
-                out += event['amount'] * self.total_shares
+                self.uncollected_dividends += event['amount'] * \
+                    self.total_shares
                 event['collected'] = True
-        return out if out > 0 else None
+
+    def collect_dividends(self):
+        self.gather_uncollected_dividends()
+        temp = self.uncollected_dividends
+        self.uncollected_dividends = 0
+        return temp
