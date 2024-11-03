@@ -3,6 +3,8 @@ import time
 
 
 def time_to_text(_time: arrow.Arrow, auto_granularity: bool = True, **kwargs) -> str:
+    if not isinstance(_time, arrow.Arrow):
+        _time = other_time_to_arrow(_time)
     if auto_granularity:
         now = arrow.now()
         diff = (now - _time).total_seconds()
@@ -31,8 +33,5 @@ def current_time():
     return time
 
 
-# Example usage
-print(current_time())
-print(time_to_text(current_time()))
-print(time_to_text(arrow.get("2021-01-01")))
-print(time_to_text(arrow.get("2024-11-2").shift(hours=-5)))
+def other_time_to_arrow(other_time):
+    return arrow.get(other_time)
