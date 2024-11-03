@@ -1,5 +1,5 @@
 from manage_times import current_time
-from global_settings import STARTING_BALANCE, PORTFOLIO_ID_FILE
+from global_settings import PORTFOLIO_ID_FILE
 import json
 
 
@@ -13,10 +13,12 @@ def get_id():
 
 class Portfolio():
     def __init__(self) -> None:
+        from global_settings import STARTING_BALANCE
         self.id = get_id()
         self.balance = STARTING_BALANCE
         self.intial_time = current_time()
         self.transactions = []
+        self.START_BAL = STARTING_BALANCE
 
     def __dict__(self):
         return {
@@ -30,6 +32,7 @@ class Portfolio():
         return json.dumps(self.__dict__())
 
     def update_balance(self):
+        bal = self.START_BAL
         for t in self.transactions:
             t = t.__dict__()
             if t['buy']:

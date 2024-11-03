@@ -1,5 +1,6 @@
 import yfinance as yf
 from manage_times import current_time, other_time_to_arrow, time_to_text
+import arrow
 
 
 def get_stock_price(ticker, amt=1):
@@ -18,11 +19,13 @@ def get_updates(ticker, start, end=current_time()):
     if events.empty:
         return out
     for date, div in zip(stock.dividends.index, stock.dividends):
-        out.append({"type": "dividend",
-                    "date": other_time_to_arrow(date), "amount": div})
+        if date.isbetween(start, end):
+            out.append({"type": "dividend",
+                        "date": other_time_to_arrow(date), "amount": div})
     for date, split in zip(stock.splits.index, stock.splits):
-        out.append({"type": "split",
-                    "date": other_time_to_arrow(date), "amount": split})
+        if date.isbetween(start, end):
+            out.append({"type": "split",
+                        "date": other_time_to_arrow(date), "amount": split})
     return out
 
 

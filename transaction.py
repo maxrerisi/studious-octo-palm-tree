@@ -1,57 +1,69 @@
 from manage_times import current_time, time_to_text, other_time_to_arrow
 import json
-from stock_data import get_stock_price
+from stock_data import get_stock_price, get_updates
 import yfinance as yf
 import arrow
 
 
 class Transaction():
-    def __init__(self, amt: int, ticker: str, sell: bool) -> None:
-        self.amount = amt
+    def __init__(self, amt: int, ticker: str) -> None:
+        self.shares = amt
         self.time = current_time()
         self.last_update = self.time()
+        self.sell_time = None
+        self.sell_amt =
         self.ticker = ticker
-        self.sell = sell
+        # will assume every transaction is a buy, and you can only sell what you have bought
+        self.sell = False
         self.price = get_stock_price(self.ticker)
-        self.total = self.amount * self.price
+        self.total = self.shares * self.price
         self.events = []
 
     def to_json(self):
         return json.dumps(self.__dict__)
 
     def __str__(self) -> str:
-        return f"{'Sold' if self.sell else 'Bought'} {self.amount} shares of {self.ticker} {time_to_text(self.time)}"
+        return f"{'Sold' if self.sell else 'Bought'} {self.shares} shares of {self.ticker} {time_to_text(self.time)}"
 
     def __dict__(self):
         return {
-            "amount": self.amount,
+            "amount": self.shares,
             "time": self.time,
             "ticker": self.ticker,
             "sell": self.sell,
             "price": self.price,
-            "total": self.total
+            "total": self.total,
+            "events": self.events
         }
 
     def check_events(self):
-        stock = yf.Ticker(self.ticker)
-        events = stock.history(start=self.last_update, end=current_time())
+        if not self.sell:
+            updates = get_updates(self.ticker, self.last_update)
+            self.last_update = current_time()
+            for event in updates:
+                event['collected'] = False
+                self.events.append(event)
+            self.collect_splits()
 
-        if not events.empty:
-            print(f"New events for {self.ticker} since last update:")
-            print(events)
-        self.last_update = current_time()
+    def collect_splits(self):
+        if not self.sell:
+            for event in self.events:
+                if event['type'] == 'split' and not event['collected']:
+                    self.shares *= event['amount']
+                    self.total = self.shares * self.price
+                    event['collected'] = True
 
+    def collect_dividends(self):
+        if not self.sell:
+            out = 0
+            for event in self.events:
+                if event['type'] == 'dividend' and not event['collected']:
+                    out += event['amount'] * self.shares
+                    event['collected'] = True
+            return out
+        return None
 
-stock = yf.Ticker('msft')
-print(time_to_text(
-    stock.dividends.index[0]), stock.dividends.iloc[0])
-print(stock.dividends)
-input()
-events = stock.history(start=arrow.Arrow(2020, 10, 1), end=current_time())
-
-if not events.empty:
-    print(f"New events for {'msft'} since last update:")
-    print(events)
-    for ev in events.iloc():
-        if ev['Dividends'] > 0:
-            print(f"Dividend of {ev['Dividends']} on {ev.name}")
+    def sell(self):
+        self.sell = True
+        self.sell_time = current_time()
+        return self.co
