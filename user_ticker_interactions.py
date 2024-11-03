@@ -6,22 +6,23 @@ from stock_data import get_stock_price, get_updates
 class UserTickerInteraction:
     def __init__(self, user_id: int, ticker: str) -> None:
         self.user_id = user_id
-        self.ticker = ticker
+        self.ticker = ticker.upper()
         self.time = current_time()
         self.last_update = self.time
         self.total_shares = 0
         self.transactions = []
         self.events = []
 
-    def add_transaction(self, amt: int, sell: bool) -> None:
+    def add_transaction(self, amt: int, sell: bool, price=None) -> None:
+        if price is None:
+            price = get_stock_price(self.ticker)
         if sell and self.total_shares < amt:
             raise ValueError("Cannot sell more shares than you own")
-        price = get_stock_price(self.ticker)
         transaction = {
             "amount": amt,
             "time": current_time(),
             "sold": sell,
-            "price": get_stock_price(self.ticker),
+            "price": price,
             "total": amt * price
         }
         self.transactions.append(transaction)
