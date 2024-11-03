@@ -1,5 +1,5 @@
 from manage_times import current_time
-from global_settings import PORTFOLIO_ID_FILE
+from global_settings import PORTFOLIO_ID_PATH
 import json
 from stock_data import get_stock_price
 from user_ticker_interactions import UserTickerInteraction
@@ -8,9 +8,9 @@ from user_ticker_interactions import UserTickerInteraction
 
 
 def get_id():
-    with open(PORTFOLIO_ID_FILE, "r") as f:
+    with open(PORTFOLIO_ID_PATH, "r") as f:
         id = int(f.read())
-    with open(PORTFOLIO_ID_FILE, "w") as f:
+    with open(PORTFOLIO_ID_PATH, "w") as f:
         f.write(str(id + 1))
     return id
 
