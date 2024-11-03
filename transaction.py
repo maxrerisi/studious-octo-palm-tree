@@ -6,15 +6,13 @@ import arrow
 
 
 class Transaction():
-    def __init__(self, amt: int, ticker: str) -> None:
+    def __init__(self, amt: int, ticker: str, sold: bool) -> None:
         self.shares = amt
         self.time = current_time()
         self.last_update = self.time()
-        self.sell_time = None
-        self.sell_amt =
         self.ticker = ticker
         # will assume every transaction is a buy, and you can only sell what you have bought
-        self.sell = False
+        self.sell = sell
         self.price = get_stock_price(self.ticker)
         self.total = self.shares * self.price
         self.events = []
