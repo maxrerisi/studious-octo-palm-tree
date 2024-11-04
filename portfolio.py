@@ -4,8 +4,6 @@ import json
 from stock_data import get_stock_price
 from user_ticker_interactions import UserTickerInteraction
 
-# TODO will have to clear this file.
-
 
 def get_id():
     with open(PORTFOLIO_ID_PATH, "r") as f:
@@ -17,14 +15,15 @@ def get_id():
 
 class Portfolio():
     def __init__(self) -> None:
-        from global_settings import STARTING_BALANCE, PORTFOLIO_SAVE_DIR
+        from global_settings import STARTING_BALANCE, PORTFOLIO_JSON_SAVE_DIR, PORTFOLIO_PICKLE_SAVE_DIR
         self.id = get_id()
         self.cash_balance = STARTING_BALANCE
         self.intial_time = current_time()
         self.stock_history = []
         self.portfolio_value = self.cash_balance
-        self.path = f"{PORTFOLIO_SAVE_DIR}/{self.id}.json"
-        self.save()
+        self.path = f"{PORTFOLIO_JSON_SAVE_DIR}/{self.id}.json"
+        self.pickle_path = f"{PORTFOLIO_PICKLE_SAVE_DIR}/{self.id}.pkl"
+        # self.save() # TODO
 
     def __dict__(self):
         return {
@@ -72,13 +71,35 @@ class Portfolio():
     def get_cash_balance(self):
         return float(f"{self.cash_balance:.2f}")
 
-    def save(self):
+    def save_as_json(self):
         with open(self.path, "w") as f:
             json.dump(self.__dict__(), f, indent=4)
+
+    def load_from_pickle(self):
+        pass
+
+    def save_as_pickle(self):
+        pass
+
+
+def save_as_pickle(obj):
+    import pickle
+    with open(obj.pickle_path, 'wb') as file:
+        pickle.dump(obj, file)
+
+
+def load_from_pickle(id):
+    import pickle
+    from global_settings import PORTFOLIO_PICKLE_SAVE_DIR
+    with open(f"{PORTFOLIO_PICKLE_SAVE_DIR}/{id}.pkl", 'rb') as file:
+        return pickle.load(file)
 
 
 max = Portfolio()
 max.buy_stock("AAPL", 5)
-max.save()
+save_as_pickle(max)
+max = load_from_pickle(max.id)
+print(max.cash_balance)
+print(max.get_stock_history())
 # TODO a way of loading from file.
 # TODO fix the format of the JSONs that are written, they are weird and full of break chars
