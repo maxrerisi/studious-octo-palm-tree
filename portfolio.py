@@ -96,12 +96,13 @@ def load_from_pickle(id):
         return out
 
 
-max = Portfolio()
-max.buy_stock("AAPL", 5)
-save_as_pickle(max)
-print(max.id)
-max = load_from_pickle(max.id)
-print(max.cash_balance)
-print(max.get_stock_history())
+for _ in range(100):
+    max = Portfolio()
+    max.buy_stock("AAPL", 5)
+    save_as_pickle(max)
+    # print(max.id)
+    # max = load_from_pickle(max.id)
+    # print(max.cash_balance)
+    # print(max.get_stock_history())
 # TODO a way of loading from file.
 # TODO fix the format of the JSONs that are written, they are weird and full of break chars
