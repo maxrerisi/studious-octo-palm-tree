@@ -92,12 +92,14 @@ def load_from_pickle(id):
     import pickle
     from global_settings import PORTFOLIO_PICKLE_SAVE_DIR
     with open(f"{PORTFOLIO_PICKLE_SAVE_DIR}/{id}.pkl", 'rb') as file:
-        return pickle.load(file)
+        out = pickle.load(file)
+        return out
 
 
 max = Portfolio()
 max.buy_stock("AAPL", 5)
 save_as_pickle(max)
+print(max.id)
 max = load_from_pickle(max.id)
 print(max.cash_balance)
 print(max.get_stock_history())
